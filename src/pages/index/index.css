@@ -1,0 +1,25 @@
+.card-hovered {
+  transform: scale(1.02); /* 放大到 1.1 倍 */
+  transition: transform 0.3s ease; /* 添加过渡动画 */
+  z-index: 1; /* 确保卡片在放大时显示在其他元素之上 */
+}
+
+.table-container {
+  height: 650px; /* 设置固定高度 */
+  width: 100%;
+
+  overflow: auto; /* 超出部分显示滚动条 */
+  margin-top: -130px;
+}
+
+.hover-scale-table {
+  transition: transform 0.3s ease;
+  transform-origin: top left;
+}
+
+
+/* 鼠标悬停放大表格 */
+/* .hover-scale-table:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+} */

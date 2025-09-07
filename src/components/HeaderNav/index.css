@@ -1,0 +1,28 @@
+/* index.css */
+
+/* 设置全局字体颜色为白色 */
+body, html, .ant-layout {
+    color: white;
+    background-color: black; /* 如果需要设置背景颜色为黑色 */
+  }
+  
+  /* 针对 Ant Design 的菜单、表格等组件 */
+  .ant-menu-item, .ant-menu-submenu-title, .ant-card-meta-title, .ant-card-meta-description {
+    color: white !important;
+  }
+  
+  .ant-btn {
+    color: white !important;
+  }
+  
+  .ant-pagination-item, .ant-pagination-jump-prev, .ant-pagination-jump-next {
+    color: white !important;
+  }
+  
+  /* 处理链接文本 */
+  a {
+    color: white !important;
+  }
+  
+  /* 如果有其他特殊的组件，针对性的设置 */
+  
