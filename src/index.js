@@ -7,19 +7,16 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import React from 'react';
-import { HashRouter  as Router, } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import ReactDOM from 'react-dom/client';
 import HeaderNav from "./components/HeaderNav/index";
-// import {serverConfig} from './components/config/config'
 
 // 获取根节点
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 // 渲染应用
 root.render(
-  
-  // <Router basename={serverConfig.baseName}>  
-  <Router>
+  <Router basename="/maskingSystem2">  
     <HeaderNav />
   </Router>
 );
