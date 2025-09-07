@@ -9,8 +9,10 @@ import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components';
 import defaultProps from './_defaultProps.js';
 import Index from '../../pages/index/index.jsx';
 import BuyInsurancePage from '../../pages/buyInsurance/index.jsx';
-import logoImg from '../background/f.png';
+import logoImg from '../background/g.png';
 import { useLocation } from 'react-router-dom';
+import Registration from '../../pages/Registration/index.jsx';
+import Payment from '../../pages/Payment/index.jsx';
 
 /**
  * HeaderNav 组件 - 应用的头部导航组件
@@ -30,21 +32,21 @@ const HeaderNav = () => {
       }}
     >
       <ProLayout
-        siderWidth={250}
+        siderWidth={170}
         logo={
           <div>
             <img src={logoImg} alt="logo" style={{ width: '60px', height: 'auto' }} />
           </div>
         }
-        title={<span style={{ color: 'white', fontSize: '20px' ,marginTop:-10}}>Human Resources</span>}
-        bgLayoutImgList={[
+         title={<span style={{ color: 'white', fontSize: '20px' ,marginTop:-10}}></span>}
+         bgLayoutImgList={[
           {
             left: 0,
             top: 0,
             width: '100vw',
             height: '100vh',
-            background: 'linear-gradient(135deg, #0f1748 0%, #6377deff 100%)',
-            backgroundColor: '#0f1748', // 回退颜色
+            background: 'linear-gradient(135deg, #0d4d4a 0%, #1a9188 50%, #51b7a9 100%)',
+            backgroundColor: '#0d4d4a', // 回退颜色
           },
         ]}
         {...defaultProps}
@@ -94,6 +96,8 @@ const HeaderNav = () => {
             <Routes>
               <Route path="/1" element={<Index />} />
               <Route path="/2" element={<BuyInsurancePage />} />
+              <Route path="/3" element={<Registration />} />
+              <Route path="/4" element={<Payment />} />
             </Routes>
           </ProCard>
         </PageContainer>
