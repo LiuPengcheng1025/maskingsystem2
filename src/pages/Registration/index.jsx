@@ -321,9 +321,9 @@ const Registration = () => {
           <Option value="website2">ID Card desensitization Database</Option>
           <Option value="website3">Address desensitization Database</Option>
         </Select>
-      </div>
+      </div >
         {showFirstCard ? (
-      <Card className="registration-card">
+      <Card className="registration-card" style={{marginTop: 50}}>
         <Title level={2} className="registration-title">Hospital Registration System</Title>
         
         <Form ref={formRef} layout="vertical">

@@ -75,7 +75,7 @@ const HeaderNav = () => {
               width: '200px',
             }}
             onClick={() => {
-              navigate(item.path || '/1');
+              navigate(item.path || '/3');
             }}
           >
             {dom}
@@ -87,8 +87,7 @@ const HeaderNav = () => {
         <PageContainer>
           <ProCard
             style={{
-              height: '100vh', // 占满整个视口高度
-              minHeight: 800, // 设置最小高度
+              height: 'auto', 
             }}
           >
             <Routes>
