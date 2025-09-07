@@ -1,14 +1,53 @@
 import React, { useState, useRef } from 'react';
-import { Form, Input, Button, Card, message, Modal, Select, Typography } from 'antd';
+import { useEffect } from 'react';
+import { Form, Input, Button, Card, message, Modal, Select, Typography , Table} from 'antd';
 import { createStyles } from 'antd-style';
 import { departments, doctorsByDepartment } from './data.ts';
 import { submitRegistration } from './service.ts';
 import './index.css';
+import { getInfoEntryList } from './service.ts';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const Registration = () => {
+  // 添加状态管理
+  const [dataSource, setDataSource] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  // 修改pageSize的初始值为5
+  const [pageSize, setPageSize] = useState(5);
+  const [total, setTotal] = useState(0);
+  // 获取表格数据
+  const fetchTableData = async () => {
+  try {
+    const response = await getInfoEntryList({
+      page: currentPage,
+      pageSize: pageSize
+    });
+    console.log(currentPage,pageSize,response);
+    // 确保dataSource始终是数组
+    const tableData = response.data.data;
+    setTotal(response.data.total);
+    // const tableData = Array.isArray(response.data) ? response.data : [];
+    console.log(tableData);
+
+    setDataSource(tableData);
+  } catch (error) {
+    console.error('获取表格数据失败:', error);
+    // 错误时也确保dataSource是数组
+    setDataSource([]);
+    setTotal(0);
+  }
+};
+   // 初始加载和分页变化时获取数据
+  useEffect(() => {
+    fetchTableData();
+  }, [currentPage, pageSize]);
+
+
+
+
+
   // 创建表单引用
   const formRef = useRef(null);
   
@@ -95,41 +134,41 @@ const Registration = () => {
     
     // 姓名验证
     if (!formData.name.trim()) {
-      newErrors.name = '请输入姓名';
+      newErrors.name = 'Please enter your full name';
     }
     
     // 身份证验证
     if (!formData.idCard.trim()) {
-      newErrors.idCard = '请输入身份证号';
+      newErrors.idCard = 'Please enter your ID card number';
     } else if (!/^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(formData.idCard)) {
-      newErrors.idCard = '请输入有效的身份证号';
+      newErrors.idCard = 'Please enter a valid ID card number';
     }
     
     // 地址验证
     if (!formData.address.trim()) {
-      newErrors.address = '请输入地址';
+      newErrors.address = 'Please enter your address';
     }
     
     // 电话验证
     if (!formData.phone.trim()) {
-      newErrors.phone = '请输入电话号码';
+      newErrors.phone = 'Please enter your phone number';
     } else if (!/^1[3-9]\d{9}$/.test(formData.phone)) {
-      newErrors.phone = '请输入有效的手机号码';
+      newErrors.phone = 'Please enter a valid phone number';
     }
     
     // 科室选择验证
     if (!formData.department) {
-      newErrors.department = '请选择科室';
+      newErrors.department = 'Please select a department';
     }
     
     // 医生选择验证
     if (!formData.doctor) {
-      newErrors.doctor = '请选择医生';
+      newErrors.doctor = 'Please select a doctor';
     }
     
     // 描述验证（可选，但有长度限制）
     if (formData.description && formData.description.length > 500) {
-      newErrors.description = '病情描述不能超过500字';
+      newErrors.description = 'Medical description cannot exceed 500 characters';
     }
     
     setErrors(newErrors);
@@ -156,7 +195,7 @@ const Registration = () => {
       });
       
       if (result.success) {
-        message.success('挂号成功！');
+        message.success('Registration successful!');
         setSuccessInfo({
           registrationId: result.data?.registrationId || '',
           appointmentTime: result.data?.appointmentTime || '',
@@ -175,11 +214,11 @@ const Registration = () => {
           description: '',
         });
       } else {
-        message.error(result.message || '挂号失败，请稍后重试');
+        message.error(result.message || 'Registration failed, please try again later');
       }
     } catch (error) {
-      message.error('挂号失败，请稍后重试');
-      console.error('挂号提交错误:', error);
+      message.error('Registration failed, please try again later');
+      console.error('Registration submission error:', error);
     } finally {
       setLoading(false);
     }
@@ -194,19 +233,106 @@ const Registration = () => {
   const getDoctors = () => {
     return formData.department ? doctorsByDepartment[formData.department] || [] : [];
   };
+
+
+  // 使用 useState 管理卡片显示状态
+  const [showFirstCard, setShowFirstCard] = useState(true);
+
+  // 使用 useState 管理卡片的图片路径和文字内容
+  const [cardText, setCardText] = useState('go to Application Database');
+
+  // 使用 useState 管理页面标题
+  const [pageTitle, setPageTitle] = useState('Employee Information Entry System');
+
+  // 处理第二个卡片点击事件
+  const handleSecondCardClick = () => {
+    setShowFirstCard(!showFirstCard);
+    
+    // 切换图片和文字内容
+    if (showFirstCard) {
+      formRef.current.resetFields();
+      setCardText('Return to Add Info');
+      // 切换标题为员工数据库
+      setPageTitle('Employee Database');
+    } else {
+      setCardText('go to Application Database');
+      // 切换回原标题
+      setPageTitle('Employee Information Entry System');
+    }
+  };
+
+  // 使用 useState 管理卡片的缩放状态
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  // 处理卡片鼠标进入事件
+  const handleCardMouseEnter = () => {
+    setIsCardHovered(true);
+  };
+
+  // 处理卡片鼠标离开事件
+  const handleCardMouseLeave = () => {
+    setIsCardHovered(false);
+  };
   
-  return (
+   const [selectedWebsite, setSelectedWebsite] = useState(null);
+   const handleWebsiteChange = (value) => {
+  // 不再更新selectedWebsite状态，这样placeholder会一直显示
+  // 根据选择的值打开相应的网站
+  switch (value) {
+    case 'website1':
+      window.open('https://b6786378dfc4.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
+      break;
+    case 'website2':
+      window.open('http://d6f1d662ede3.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
+      break;
+    case 'website3':
+      window.open('http://57283e72ea00.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
+      break;
+    default:
+      break;
+  }
+};
+   return (
     <div className="registration-container">
+      {/* 添加右上角定位容器 */}
+      <div style={{ position: 'absolute', top: 30, right: 50, zIndex: 1000 }}>
+        <Button type="primary" size="large"
+          variant={false}
+          onClick={handleSecondCardClick} 
+          // 绑定鼠标进入和离开事件
+          onMouseEnter={handleCardMouseEnter}
+          onMouseLeave={handleCardMouseLeave}
+          // 根据状态添加类名
+          className={isCardHovered ? 'card-hovered' : ''} 
+          style={{
+            width: '225px',
+            right: 50,
+          }}
+      >
+        {cardText}
+      </Button>
+        <Select
+          placeholder="Select masked database to access"
+          style={{ width: 350 }} // 增加宽度以完全显示文字
+          value={selectedWebsite}
+          onChange={handleWebsiteChange}
+          allowClear
+        >
+          <Option value="website1">Phone Number desensitization Database</Option>
+          <Option value="website2">ID Card desensitization Database</Option>
+          <Option value="website3">Address desensitization Database</Option>
+        </Select>
+      </div>
+        {showFirstCard ? (
       <Card className="registration-card">
-        <Title level={2} className="registration-title">医院挂号系统</Title>
+        <Title level={2} className="registration-title">Hospital Registration System</Title>
         
         <Form ref={formRef} layout="vertical">
           <div className="form-section">
-            <Title level={4}>个人信息</Title>
+            <Title level={4}>Personal Information</Title>
             <div className="form-row">
-              <Form.Item label="姓名" validateStatus={errors.name ? 'error' : ''} help={errors.name}>
+              <Form.Item label="Full Name" validateStatus={errors.name ? 'error' : ''} help={errors.name}>
                 <Input
-                  placeholder="请输入您的姓名"
+                  placeholder="Please enter your full name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
@@ -214,9 +340,9 @@ const Registration = () => {
                 />
               </Form.Item>
               
-              <Form.Item label="身份证号" validateStatus={errors.idCard ? 'error' : ''} help={errors.idCard}>
+              <Form.Item label="ID Card Number" validateStatus={errors.idCard ? 'error' : ''} help={errors.idCard}>
                 <Input
-                  placeholder="请输入您的身份证号"
+                  placeholder="Please enter your ID card number"
                   name="idCard"
                   value={formData.idCard}
                   onChange={handleChange}
@@ -226,9 +352,9 @@ const Registration = () => {
             </div>
             
             <div className="form-row">
-              <Form.Item label="联系电话" validateStatus={errors.phone ? 'error' : ''} help={errors.phone}>
+              <Form.Item label="Phone Number" validateStatus={errors.phone ? 'error' : ''} help={errors.phone}>
                 <Input
-                  placeholder="请输入您的手机号码"
+                  placeholder="Please enter your phone number"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
@@ -236,9 +362,9 @@ const Registration = () => {
                 />
               </Form.Item>
               
-              <Form.Item label="地址" validateStatus={errors.address ? 'error' : ''} help={errors.address}>
+              <Form.Item label="Address" validateStatus={errors.address ? 'error' : ''} help={errors.address}>
                 <Input
-                  placeholder="请输入您的居住地址"
+                  placeholder="Please enter your address"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
@@ -249,11 +375,11 @@ const Registration = () => {
           </div>
           
           <div className="form-section">
-            <Title level={4}>挂号信息</Title>
+            <Title level={4}>Registration Information</Title>
             <div className="form-row">
-              <Form.Item label="科室" validateStatus={errors.department ? 'error' : ''} help={errors.department}>
+              <Form.Item label="Department" validateStatus={errors.department ? 'error' : ''} help={errors.department}>
                 <Select
-                  placeholder="请选择科室"
+                  placeholder="Please select a department"
                   value={formData.department}
                   onChange={(value) => handleSelectChange('department', value)}
                   className="form-select"
@@ -264,9 +390,9 @@ const Registration = () => {
                 </Select>
               </Form.Item>
               
-              <Form.Item label="医生" validateStatus={errors.doctor ? 'error' : ''} help={errors.doctor}>
+              <Form.Item label="Doctor" validateStatus={errors.doctor ? 'error' : ''} help={errors.doctor}>
                 <Select
-                  placeholder="请选择医生"
+                  placeholder="Please select a doctor"
                   value={formData.doctor}
                   onChange={(value) => handleSelectChange('doctor', value)}
                   disabled={!formData.department}
@@ -279,16 +405,16 @@ const Registration = () => {
                       disabled={!doctor.available}
                     >
                       {doctor.name} - {doctor.title}
-                      {!doctor.available && ' (已满)'}
+                      {!doctor.available && ' (Full)'}
                     </Option>
                   ))}
                 </Select>
               </Form.Item>
             </div>
             
-            <Form.Item label="病情描述（选填）" validateStatus={errors.description ? 'error' : ''} help={errors.description}>
+            <Form.Item label="Medical Description (Optional)" validateStatus={errors.description ? 'error' : ''} help={errors.description}>
   <Input.TextArea
-    placeholder="请简要描述您的病情（可选）"
+    placeholder="Please briefly describe your condition (optional)"
     name="description"
     value={formData.description}
     onChange={handleChange}
@@ -308,32 +434,94 @@ const Registration = () => {
   size="large"
   block
 >
-  提交挂号
+  Submit Registration
 </Button>
         </Form>
       </Card>
-      
+        ) : (
+     <Card title="Database" style={{marginTop:"50px"}}>
+            {/* 绑定点击事件 */}
+            {/* <Button type="primary" style={{ marginRight: 16 }} onClick={refreshData}>Update Database</Button> */}
+            {/* 自定义分页配置的表格 */}
+            <div className="table-container">
+              <Table 
+                className="hover-scale-table"
+                columns={[
+                  {
+                    title: 'Name',
+                    dataIndex: 'name',
+                    key: 'name',
+                  },
+                  {
+                    title: 'Phone',
+                    dataIndex: 'phone',
+                    key: 'phone',
+                  },
+                  {
+                    title: 'ID Number',
+                    dataIndex: 'id',
+                    key: 'id',
+                  },
+                  {
+                    title: 'Address',
+                    dataIndex: 'address',
+                    key: 'address',
+                  },
+                  {
+                    title: 'Position',
+                    dataIndex: 'position',
+                    key: 'position',
+                  },
+                  {
+                    title: 'Remarks',
+                    dataIndex: 'descr',
+                    key: 'descr',
+                  },
+                ]} 
+                dataSource={dataSource} 
+                pagination={{
+                  current: currentPage,
+                  pageSize: pageSize, // 这里会使用我们设置的初始值5
+                  total: total,
+                  showQuickJumper: true,
+                  showSizeChanger: true,
+                  // 分页变化回调
+                  onChange: (page, pageSize) => {
+                    setCurrentPage(page);
+                    setPageSize(pageSize);
+                  },
+                  onShowSizeChange: (current, size) => {
+                    setCurrentPage(1);
+                    setPageSize(size);
+                  }
+                }}
+                // 添加表格属性，确保表头固定
+                scroll={{ y: 'calc(100% - 50px)' }} 
+              />
+            </div>
+          </Card>
+        )}
       {/* 挂号成功弹窗 */}
       <Modal
-        title="挂号成功"
+        title="Registration Successful"
         open={isSuccessModalVisible}
         onOk={handleSuccessModalClose}
         onCancel={handleSuccessModalClose}
         footer={[
           <Button key="ok" type="primary" onClick={handleSuccessModalClose}>
-            确定
+            OK
           </Button>
         ]}
       >
         <div className="success-content">
-          <p>恭喜您，挂号成功！</p>
+          <p>Congratulations! Your registration has been successful!</p>
           {successInfo.registrationId && (
-            <p>挂号单号：{successInfo.registrationId}</p>
+            <p>Registration ID: {successInfo.registrationId}</p>
           )}
           {successInfo.appointmentTime && (
-            <p>预约时间：{successInfo.appointmentTime}</p>
+            <p>Appointment Time: {successInfo.appointmentTime}</p>
           )}
-          <p>请按时前往医院就诊。</p>
+          <p>Please arrive at the hospital on time for your appointment.</p>
         </div>
       </Modal>
     </div>

@@ -33,24 +33,35 @@ const Payment = () => {
   };
   
   // 验证身份证号
-  const validateIdCard = (value) => {
-    const idCardRegex = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-    if (!value) {
-      return Promise.reject('请输入身份证号');
-    }
-    if (!idCardRegex.test(value)) {
-      return Promise.reject('请输入有效的身份证号');
-    }
-    return Promise.resolve();
-  };
+//   const validateIdCard = (value) => {
+//     const idCardRegex = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+//     if (!value) {
+//       return Promise.reject('Please enter ID card number');
+//     }
+//     if (!idCardRegex.test(value)) {
+//       return Promise.reject('Please enter a valid ID card number');
+//     }
+//     return Promise.resolve();
+//   };
+  // 验证身份证号
+const validateIdCard = (value) => {
+  if (!value) {
+    return Promise.reject('请输入身份证号码');
+  }
+  if (value.length !== 18) {
+    return Promise.reject('身份证格式有误，请重新输入');
+  }
+  return Promise.resolve();
+};
   
   // 搜索缴费信息
   const handleSearch = async () => {
     try {
-      await validateIdCard(idCard);
+       await validateIdCard(idCard);
       
       setSearching(true);
       const result = await searchPaymentByIDCard({ idCard });
+      console.log(idCard)
       
       if (result.success) {
         setPaymentInfo(result.data);
@@ -61,7 +72,7 @@ const Payment = () => {
       }
     } catch (error) {
       setPaymentInfo(null);
-      message.error(error.message || '搜索失败，请稍后重试');
+      message.error(error.message || 'Search failed, please try again later');
     } finally {
       setSearching(false);
     }
@@ -70,7 +81,7 @@ const Payment = () => {
   // 处理医保支付
   const handleMedicalInsurancePayment = async () => {
     if (!paymentInfo) {
-      message.warning('请先搜索缴费信息');
+      message.warning('Please search payment information first');
       return;
     }
     
@@ -85,13 +96,13 @@ const Payment = () => {
         // 在实际项目中，这里应该跳转到医保支付页面
         // 由于接口未实现，这里只是模拟跳转
         setTimeout(() => {
-          message.info('即将跳转到医保支付页面...');
+          message.info('Redirecting to medical insurance payment page...');
         }, 1000);
       } else {
         message.error(result.message);
       }
     } catch (error) {
-      message.error('支付请求失败，请稍后重试');
+      message.error('Payment request failed, please try again later');
     } finally {
       setLoading(false);
     }
@@ -100,17 +111,22 @@ const Payment = () => {
   return (
     <div className="payment-container">
       <Card className="payment-card">
-        <Title level={2} className="payment-title">医院缴费系统</Title>
+        <Title level={2} className="payment-title">Hospital Payment System</Title>
         
         <div className="search-section">
           <Form layout="vertical">
             <div className="form-row">
               <Form.Item
-                label="身份证号"
-                rules={[{ validator: validateIdCard }]}
+                label="ID Card Number"
+                rules={[
+                  { 
+                    validator: validateIdCard,
+                    validateTrigger: ['onBlur', 'onChange']
+                  }
+                ]}
               >
                 <Input
-                  placeholder="请输入患者身份证号"
+                  placeholder="Please enter patient's ID card number"
                   value={idCard}
                   onChange={handleIdCardChange}
                   maxLength={18}
@@ -125,7 +141,7 @@ const Payment = () => {
                   loading={searching}
                   style={{ marginTop: 24, width: '100%' }}
                 >
-                  搜索
+                  Search
                 </Button>
               </Form.Item>
             </div>
@@ -138,47 +154,47 @@ const Payment = () => {
           <div className="payment-details">
             {/* 患者信息 */}
             <div className="info-section">
-              <Title level={4} className="info-title">患者信息</Title>
+              <Title level={4} className="info-title">Patient Information</Title>
               <div className="info-item">
-                <span className="info-label">姓名：</span>
+                <span className="info-label">Name: </span>
                 <span className="info-value">{paymentInfo.patient.name}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">身份证号：</span>
+                <span className="info-label">ID Card: </span>
                 <span className="info-value">{paymentInfo.patient.idCard}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">地址：</span>
+                <span className="info-label">Address: </span>
                 <span className="info-value">{paymentInfo.patient.address}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">联系电话：</span>
+                <span className="info-label">Phone: </span>
                 <span className="info-value">{paymentInfo.patient.phone}</span>
               </div>
             </div>
             
             {/* 挂号信息 */}
             <div className="info-section">
-              <Title level={4} className="info-title">挂号信息</Title>
+              <Title level={4} className="info-title">Registration Information</Title>
               <div className="info-item">
-                <span className="info-label">挂号单号：</span>
+                <span className="info-label">Registration ID: </span>
                 <span className="info-value">{paymentInfo.registration.registrationId}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">科室：</span>
+                <span className="info-label">Department: </span>
                 <span className="info-value">{paymentInfo.registration.departmentName}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">医生：</span>
+                <span className="info-label">Doctor: </span>
                 <span className="info-value">{paymentInfo.registration.doctorName}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">预约时间：</span>
+                <span className="info-label">Appointment Time: </span>
                 <span className="info-value">{paymentInfo.registration.appointmentTime}</span>
               </div>
               {paymentInfo.registration.description && (
                 <div className="info-item">
-                  <span className="info-label">病情描述：</span>
+                  <span className="info-label">Description: </span>
                   <span className="info-value">{paymentInfo.registration.description}</span>
                 </div>
               )}
@@ -186,7 +202,7 @@ const Payment = () => {
             
             {/* 缴费金额 */}
             <div className="payment-amount">
-              待缴费金额：¥{paymentInfo.amount.toFixed(2)}
+              Amount to pay: ¥{paymentInfo.amount.toFixed(2)}
             </div>
             
             {/* 支付按钮 */}
@@ -198,12 +214,12 @@ const Payment = () => {
               size="large"
               block
             >
-              医保支付
+              Medical Insurance Payment
             </Button>
           </div>
         ) : (
           <div className="empty-state">
-            <Text>请输入身份证号并点击搜索按钮查询缴费信息<br/>示例身份证号：110101199001011234</Text>
+            <Text>Please enter ID card number and click search button to query payment information<br/>Example ID: 110101199001011234</Text>
           </div>
         )}
       </Card>

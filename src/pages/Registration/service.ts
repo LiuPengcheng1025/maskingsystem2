@@ -1,5 +1,19 @@
 import { RegistrationRequest, RegistrationResponse } from './data';
 
+
+import request from 'umi-request';
+import { serverConfig } from '../../components/config/config.ts'
+import { listParams,listData } from './data';
+
+
+export async function getInfoEntryList(params: listParams) {
+  return request<{
+    total: number;
+    data: listData[];
+  }[]>(`${serverConfig.baseUrl}/infoEntry/get`, { params });
+}
+
+
 // 模拟API延迟
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 

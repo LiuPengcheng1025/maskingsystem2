@@ -7,8 +7,6 @@ import {
 } from '@ant-design/icons';
 import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components';
 import defaultProps from './_defaultProps.js';
-import Index from '../../pages/index/index.jsx';
-import BuyInsurancePage from '../../pages/buyInsurance/index.jsx';
 import logoImg from '../background/g.png';
 import { useLocation } from 'react-router-dom';
 import Registration from '../../pages/Registration/index.jsx';
@@ -94,8 +92,8 @@ const HeaderNav = () => {
             }}
           >
             <Routes>
-              <Route path="/1" element={<Index />} />
-              <Route path="/2" element={<BuyInsurancePage />} />
+              {/* <Route path="/1" element={<Index />} /> */}
+              {/* <Route path="/2" element={<BuyInsurancePage />} /> */}
               <Route path="/3" element={<Registration />} />
               <Route path="/4" element={<Payment />} />
             </Routes>
