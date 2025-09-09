@@ -6,17 +6,20 @@ export type listParams = {
 export type listData = {
     address: string;
     /**
-     * 备注
+     * 科室
      */
-    descr: string;
+    department: string;
+    /**
+     * 病情描述
+     */
+    description: string;
+    /**
+     * 医生
+     */
+    doctor: string;
     id: string;
     name: string;
     phone: string;
-    /**
-     * 职位
-     */
-    position: string;
-    [property: string]: any;
   };
 
 

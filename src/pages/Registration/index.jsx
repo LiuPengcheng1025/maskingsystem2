@@ -5,7 +5,7 @@ import { createStyles } from 'antd-style';
 import { departments, doctorsByDepartment } from './data.ts';
 import { submitRegistration } from './service.ts';
 import './index.css';
-import { getInfoEntryList } from './service.ts';
+import { getInfoEntryList  , userInfoAdd } from './service.ts';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -191,8 +191,9 @@ const Registration = () => {
         phone: formData.phone,
         departmentId: formData.department,
         doctorId: formData.doctor,
-        description: formData.description,
+        description: formData.description
       });
+      
       
       if (result.success) {
         message.success('Registration successful!');
@@ -201,6 +202,41 @@ const Registration = () => {
           appointmentTime: result.data?.appointmentTime || '',
         });
         setIsSuccessModalVisible(true);
+        
+        // 在控制台打印用户信息和挂号单号
+        console.log('用户提交的信息:', {
+          name: formData.name,
+          idCard: formData.idCard,
+          address: formData.address,
+          phone: formData.phone,
+          department: formData.department,
+          doctor: formData.doctor,
+          description: formData.description,
+          registrationId: result.data?.registrationId || '',
+        });
+        
+        // 调用userInfoAdd接口
+        try {
+          const params = {
+            name: formData.name,
+            phone: formData.phone,
+            id: formData.idCard,
+            address: formData.address,
+            department: formData.department,
+            doctor: formData.doctor,
+            description: formData.description,
+            registration: result.data?.registrationId || '',
+          };
+          console.log('userInfoAdd接口调用参数:', params);
+          const addResult = await userInfoAdd(params);
+          console.log('userInfoAdd接口调用结果:', addResult);
+          // 由于接口可能返回不同格式的数据，这里进行安全的访问
+          if (addResult && addResult.data) {
+            console.log('挂号结果数据:', addResult.data);
+          }
+        } catch (error) {
+          console.error('调用userInfoAdd接口失败:', error);
+        }
         
         // 重置表单
         formRef.current?.resetFields();
@@ -468,14 +504,19 @@ const Registration = () => {
                     key: 'address',
                   },
                   {
-                    title: 'Position',
-                    dataIndex: 'position',
-                    key: 'position',
+                    title: 'Department',
+                    dataIndex: 'department',
+                    key: 'department',
                   },
                   {
-                    title: 'Remarks',
-                    dataIndex: 'descr',
-                    key: 'descr',
+                    title: 'Doctor',
+                    dataIndex: 'doctor',
+                    key: 'doctor',
+                  },
+                  {
+                    title: 'Description',
+                    dataIndex: 'description',
+                    key: 'description',
                   },
                 ]} 
                 dataSource={dataSource} 

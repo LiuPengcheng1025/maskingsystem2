@@ -1,3 +1,35 @@
+export type listData2 = {
+   /**
+     * 地址
+     */
+    address: string;
+    /**
+     * 科室
+     */
+    department: string;
+    /**
+     * 医生
+     */
+    doctor: string;
+    /**
+     * 身份证
+     */
+    id: string;
+    /**
+     * 姓名
+     */
+    name: string;
+    /**
+     * 电话
+     */
+    phone: string;
+    /**
+     * 挂单单号
+     */
+    registration: string;
+  };
+
+
 // 患者信息数据模型
 export interface PatientInfo {
   name: string;

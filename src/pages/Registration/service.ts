@@ -6,11 +6,29 @@ import { serverConfig } from '../../components/config/config.ts'
 import { listParams,listData } from './data';
 
 
+export async function userInfoAdd(params: {
+  name: string;
+  phone: string;
+  id: string;
+  address: string;
+  department: string;
+  doctor: string;
+  description: string;
+  registration:string;
+}) {
+  return request<{}[]>(`${serverConfig.baseUrl}/registration/add`, {
+    method: 'POST', 
+    data: params, 
+  });
+}
+
+
+
 export async function getInfoEntryList(params: listParams) {
   return request<{
     total: number;
     data: listData[];
-  }[]>(`${serverConfig.baseUrl}/infoEntry/get`, { params });
+  }[]>(`${serverConfig.baseUrl}/registration/get`, { params });
 }
 
 

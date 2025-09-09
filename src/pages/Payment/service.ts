@@ -1,4 +1,16 @@
-import { SearchParams, ApiResponse, PaymentInfo } from './data';
+import { SearchParams, ApiResponse, PaymentInfo , listData2 } from './data';
+import request from 'umi-request';
+import { serverConfig } from '../../components/config/config.ts'
+
+
+
+
+
+export async function getPayment({id:string}) {
+  return request<{
+    data: listData2[];
+  }[]>(`${serverConfig.baseUrl}/registration/paymentGet`,);
+}
 
 // 模拟API延迟
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));

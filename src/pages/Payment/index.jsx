@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Card, message, Typography, Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { SearchOutlined } from '@ant-design/icons';
-import { searchPaymentByIDCard, submitMedicalInsurancePayment } from './service.ts';
+import { searchPaymentByIDCard, submitMedicalInsurancePayment  , getPayment} from './service.ts';
 import './index.css';
 
 const { Title, Text } = Typography;
@@ -60,16 +60,19 @@ const validateIdCard = (value) => {
        await validateIdCard(idCard);
       
       setSearching(true);
-      const result = await searchPaymentByIDCard({ idCard });
-      console.log(idCard)
-      
-      if (result.success) {
-        setPaymentInfo(result.data);
-        message.success(result.message);
-      } else {
-        setPaymentInfo(null);
-        message.error(result.message);
-      }
+      const result = await getPayment({ id:idCard });
+      console.log("result",result)
+      console.log("result.data",result.data)
+      setPaymentInfo(result.data);
+      // if (result.success) {
+      //   setPaymentInfo(result.data);
+      //   console.log(paymentInfo)
+      //   message.success(result.message);
+      // } else {
+      //   setPaymentInfo(result.data);
+      //   console.log(paymentInfo)
+      //   message.error(result.message);
+      // }
     } catch (error) {
       setPaymentInfo(null);
       message.error(error.message || 'Search failed, please try again later');
@@ -157,19 +160,19 @@ const validateIdCard = (value) => {
               <Title level={4} className="info-title">Patient Information</Title>
               <div className="info-item">
                 <span className="info-label">Name: </span>
-                <span className="info-value">{paymentInfo.patient.name}</span>
+                <span className="info-value">{paymentInfo.name}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">ID Card: </span>
-                <span className="info-value">{paymentInfo.patient.idCard}</span>
+                <span className="info-value">{paymentInfo.id}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Address: </span>
-                <span className="info-value">{paymentInfo.patient.address}</span>
+                <span className="info-value">{paymentInfo.address}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Phone: </span>
-                <span className="info-value">{paymentInfo.patient.phone}</span>
+                <span className="info-value">{paymentInfo.phone}</span>
               </div>
             </div>
             
@@ -178,31 +181,31 @@ const validateIdCard = (value) => {
               <Title level={4} className="info-title">Registration Information</Title>
               <div className="info-item">
                 <span className="info-label">Registration ID: </span>
-                <span className="info-value">{paymentInfo.registration.registrationId}</span>
+                <span className="info-value">{paymentInfo.registration}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Department: </span>
-                <span className="info-value">{paymentInfo.registration.departmentName}</span>
+                <span className="info-value">{paymentInfo.department}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Doctor: </span>
-                <span className="info-value">{paymentInfo.registration.doctorName}</span>
+                <span className="info-value">{paymentInfo.doctor}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Appointment Time: </span>
-                <span className="info-value">{paymentInfo.registration.appointmentTime}</span>
+                <span className="info-value">略</span>
               </div>
               {paymentInfo.registration.description && (
                 <div className="info-item">
                   <span className="info-label">Description: </span>
-                  <span className="info-value">{paymentInfo.registration.description}</span>
+                  <span className="info-value">略</span>
                 </div>
               )}
             </div>
             
             {/* 缴费金额 */}
             <div className="payment-amount">
-              Amount to pay: ¥{paymentInfo.amount.toFixed(2)}
+              Amount to pay: ¥537.85
             </div>
             
             {/* 支付按钮 */}
