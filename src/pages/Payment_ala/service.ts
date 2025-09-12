@@ -6,10 +6,10 @@ import { serverConfig } from '../../components/config/config.ts'
 
 
 
-export async function getPayment({id:string}) {
+export async function getPayment(params: {id:String}) {
   return request<{
     data: listData2[];
-  }[]>(`${serverConfig.baseUrl}/registration/paymentGet`,);
+  }[]>(`${serverConfig.baseUrl}/registration/paymentGet`, { params });
 }
 
 // 模拟API延迟

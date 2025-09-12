@@ -11,13 +11,32 @@ export default {
     routes: [
      
       {
-        path: '/3',
+        path: '/registration_en',
         name: <span style={{ color: 'white', }}>registration</span>,
         // icon: <img src={logo3} style={{ width: '20px', height: '20px' }} alt="registration" />, 
       },
       {
-        path: '/4',
+        path: '/payment_en',
         name: <span style={{ color: 'white', }}>payment</span>,
+        // icon: <img src={logo4} style={{ width: '20px', height: '20px' }} alt="payment" />, 
+      },
+      {
+        path: '/registration_ch',
+        name: <span style={{ color: 'white', }}>挂号</span>,
+      },
+      {
+        path: '/payment_ch',
+        name: <span style={{ color: 'white', }}>支付</span>,
+        // icon: <img src={logo4} style={{ width: '20px', height: '20px' }} alt="payment" />, 
+      },
+      {
+        path: '/registration_ala',
+        name: <span style={{ color: 'white', }}>تسجيل</span>,
+        // icon: <img src={logo3} style={{ width: '20px', height: '20px' }} alt="registration" />, 
+      },
+      {
+        path: '/payment_ala',
+        name: <span style={{ color: 'white', }}>دفع</span>,
         // icon: <img src={logo4} style={{ width: '20px', height: '20px' }} alt="payment" />, 
       },
       // {

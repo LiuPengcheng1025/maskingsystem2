@@ -33,26 +33,15 @@ const Payment = () => {
   };
   
   // 验证身份证号
-//   const validateIdCard = (value) => {
-//     const idCardRegex = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-//     if (!value) {
-//       return Promise.reject('Please enter ID card number');
-//     }
-//     if (!idCardRegex.test(value)) {
-//       return Promise.reject('Please enter a valid ID card number');
-//     }
-//     return Promise.resolve();
-//   };
-  // 验证身份证号
-const validateIdCard = (value) => {
-  if (!value) {
-    return Promise.reject('请输入身份证号码');
-  }
-  if (value.length !== 18) {
-    return Promise.reject('身份证格式有误，请重新输入');
-  }
-  return Promise.resolve();
-};
+  const validateIdCard = (value) => {
+    if (!value) {
+      return Promise.reject('请输入身份证号码');
+    }
+    if (value.length !== 18) {
+      return Promise.reject('身份证格式有误，请重新输入');
+    }
+    return Promise.resolve();
+  };
   
   // 搜索缴费信息
   const handleSearch = async () => {
@@ -60,22 +49,19 @@ const validateIdCard = (value) => {
        await validateIdCard(idCard);
       
       setSearching(true);
-      const result = await getPayment({ id:idCard });
+      
+      const params ={
+        id:idCard
+      }
+      console.log("params",params);
+      const result = await getPayment(params);
       console.log("result",result)
       console.log("result.data",result.data)
       setPaymentInfo(result.data);
-      // if (result.success) {
-      //   setPaymentInfo(result.data);
-      //   console.log(paymentInfo)
-      //   message.success(result.message);
-      // } else {
-      //   setPaymentInfo(result.data);
-      //   console.log(paymentInfo)
-      //   message.error(result.message);
-      // }
     } catch (error) {
+      console.log("idCard",idCard);
       setPaymentInfo(null);
-      message.error(error.message || 'Search failed, please try again later');
+      message.error(error.message || '搜索失败，请稍后再试');
     } finally {
       setSearching(false);
     }
@@ -84,7 +70,7 @@ const validateIdCard = (value) => {
   // 处理医保支付
   const handleMedicalInsurancePayment = async () => {
     if (!paymentInfo) {
-      message.warning('Please search payment information first');
+      message.warning('请先搜索缴费信息');
       return;
     }
     
@@ -99,13 +85,13 @@ const validateIdCard = (value) => {
         // 在实际项目中，这里应该跳转到医保支付页面
         // 由于接口未实现，这里只是模拟跳转
         setTimeout(() => {
-          message.info('Redirecting to medical insurance payment page...');
+          message.info('正在跳转到医保支付页面...');
         }, 1000);
       } else {
         message.error(result.message);
       }
     } catch (error) {
-      message.error('Payment request failed, please try again later');
+      message.error('支付请求失败，请稍后再试');
     } finally {
       setLoading(false);
     }
@@ -114,22 +100,22 @@ const validateIdCard = (value) => {
   return (
     <div className="payment-container">
       <Card className="payment-card">
-        <Title level={2} className="payment-title">Hospital Payment System</Title>
+        <Title level={2} className="payment-title">医院缴费系统</Title>
         
         <div className="search-section">
           <Form layout="vertical">
             <div className="form-row">
               <Form.Item
-                label="ID Card Number"
+                label="身份证号码"
                 rules={[
-                  { 
+                  {
                     validator: validateIdCard,
                     validateTrigger: ['onBlur', 'onChange']
                   }
                 ]}
               >
                 <Input
-                  placeholder="Please enter patient's ID card number"
+                  placeholder="请输入患者身份证号码"
                   value={idCard}
                   onChange={handleIdCardChange}
                   maxLength={18}
@@ -144,7 +130,7 @@ const validateIdCard = (value) => {
                   loading={searching}
                   style={{ marginTop: 24, width: '100%' }}
                 >
-                  Search
+                  搜索
                 </Button>
               </Form.Item>
             </div>
@@ -157,47 +143,47 @@ const validateIdCard = (value) => {
           <div className="payment-details">
             {/* 患者信息 */}
             <div className="info-section">
-              <Title level={4} className="info-title">Patient Information</Title>
+              <Title level={4} className="info-title">患者信息</Title>
               <div className="info-item">
-                <span className="info-label">Name: </span>
+                <span className="info-label">姓名: </span>
                 <span className="info-value">{paymentInfo.name}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">ID Card: </span>
+                <span className="info-label">身份证: </span>
                 <span className="info-value">{paymentInfo.id}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">Address: </span>
+                <span className="info-label">地址: </span>
                 <span className="info-value">{paymentInfo.address}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">Phone: </span>
+                <span className="info-label">电话: </span>
                 <span className="info-value">{paymentInfo.phone}</span>
               </div>
             </div>
             
             {/* 挂号信息 */}
             <div className="info-section">
-              <Title level={4} className="info-title">Registration Information</Title>
+              <Title level={4} className="info-title">挂号信息</Title>
               <div className="info-item">
-                <span className="info-label">Registration ID: </span>
+                <span className="info-label">挂号ID: </span>
                 <span className="info-value">{paymentInfo.registration}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">Department: </span>
+                <span className="info-label">科室: </span>
                 <span className="info-value">{paymentInfo.department}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">Doctor: </span>
+                <span className="info-label">医生: </span>
                 <span className="info-value">{paymentInfo.doctor}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">Appointment Time: </span>
+                <span className="info-label">预约时间: </span>
                 <span className="info-value">略</span>
               </div>
               {paymentInfo.registration.description && (
                 <div className="info-item">
-                  <span className="info-label">Description: </span>
+                  <span className="info-label">描述: </span>
                   <span className="info-value">略</span>
                 </div>
               )}
@@ -205,7 +191,7 @@ const validateIdCard = (value) => {
             
             {/* 缴费金额 */}
             <div className="payment-amount">
-              Amount to pay: ¥537.85
+              待支付金额: ¥537.85
             </div>
             
             {/* 支付按钮 */}
@@ -217,12 +203,12 @@ const validateIdCard = (value) => {
               size="large"
               block
             >
-              Medical Insurance Payment
+              医保支付
             </Button>
           </div>
         ) : (
           <div className="empty-state">
-            <Text>Please enter ID card number and click search button to query payment information<br/>Example ID: 110101199001011234</Text>
+            <Text>请输入身份证号码并点击搜索按钮查询缴费信息<br/>示例ID: 110101199001011234</Text>
           </div>
         )}
       </Card>

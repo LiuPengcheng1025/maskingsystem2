@@ -9,8 +9,14 @@ import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components';
 import defaultProps from './_defaultProps.js';
 import logoImg from '../background/g.png';
 import { useLocation } from 'react-router-dom';
-import Registration from '../../pages/Registration/index.jsx';
-import Payment from '../../pages/Payment/index.jsx';
+import Registration_en from '../../pages/Registration_en/index.jsx';
+import Registration_ch from '../../pages/Registration_ch/index.jsx';
+import Registration_ala from '../../pages/Registration_ala/index.jsx';
+
+import Payment_en from '../../pages/Payment_en/index.jsx';
+import Payment_ch from '../../pages/Payment_ch/index.jsx';
+import Payment_ala from '../../pages/Payment_ala/index.jsx';
+
 
 /**
  * HeaderNav 组件 - 应用的头部导航组件
@@ -91,10 +97,14 @@ const HeaderNav = () => {
             }}
           >
             <Routes>
-  <Route path="/" element={<Navigate to="/3" replace />} />
-  <Route path="/3" element={<Registration />} />
-  <Route path="/4" element={<Payment />} />
-</Routes>
+              <Route path="/" element={<Navigate to="/registration_en" replace />} />
+              <Route path="/registration_en" element={<Registration_en />} />
+              <Route path="/payment_en" element={<Payment_en />} />
+              <Route path="/registration_ch" element={<Registration_ch />} />
+              <Route path="/payment_ch" element={<Payment_ch />} />
+              <Route path="/registration_ala" element={<Registration_ala />} />
+              <Route path="/payment_ala" element={<Payment_ala />} />
+            </Routes>
           </ProCard>
         </PageContainer>
       </ProLayout>

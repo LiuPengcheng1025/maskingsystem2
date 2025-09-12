@@ -7,6 +7,7 @@ import { submitRegistration } from './service.ts';
 import './index.css';
 import { getInfoEntryList  , userInfoAdd } from './service.ts';
 
+
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -21,7 +22,7 @@ const Registration = () => {
   const fetchTableData = async () => {
   try {
     const response = await getInfoEntryList({
-      page: currentPage,
+      current: currentPage,
       pageSize: pageSize
     });
     console.log(currentPage,pageSize,response);
@@ -43,7 +44,6 @@ const Registration = () => {
   useEffect(() => {
     fetchTableData();
   }, [currentPage, pageSize]);
-
 
 
 
@@ -134,41 +134,41 @@ const Registration = () => {
     
     // 姓名验证
     if (!formData.name.trim()) {
-      newErrors.name = 'Please enter your full name';
+      newErrors.name = 'الرجاء إدخال اسمك الكامل';
     }
     
     // 身份证验证
     if (!formData.idCard.trim()) {
-      newErrors.idCard = 'Please enter your ID card number';
+      newErrors.idCard = 'الرجاء إدخال رقم بطاقة الهوية';
     } else if (!/^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(formData.idCard)) {
-      newErrors.idCard = 'Please enter a valid ID card number';
+      newErrors.idCard = 'الرجاء إدخال رقم بطاقة هوية صحيح';
     }
     
     // 地址验证
     if (!formData.address.trim()) {
-      newErrors.address = 'Please enter your address';
+      newErrors.address = 'الرجاء إدخال عنوانك';
     }
     
     // 电话验证
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Please enter your phone number';
+      newErrors.phone = 'الرجاء إدخال رقم هاتفك';
     } else if (!/^1[3-9]\d{9}$/.test(formData.phone)) {
-      newErrors.phone = 'Please enter a valid phone number';
+      newErrors.phone = 'الرجاء إدخال رقم هاتف صحيح';
     }
     
     // 科室选择验证
     if (!formData.department) {
-      newErrors.department = 'Please select a department';
+      newErrors.department = 'الرجاء اختيار قسم';
     }
     
     // 医生选择验证
     if (!formData.doctor) {
-      newErrors.doctor = 'Please select a doctor';
+      newErrors.doctor = 'الرجاء اختيار دكتور';
     }
     
     // 描述验证（可选，但有长度限制）
     if (formData.description && formData.description.length > 500) {
-      newErrors.description = 'Medical description cannot exceed 500 characters';
+      newErrors.description = 'لا يمكن أن يتجاوز الوصف الطبي 500 حرفًا';
     }
     
     setErrors(newErrors);
@@ -196,7 +196,7 @@ const Registration = () => {
       
       
       if (result.success) {
-        message.success('Registration successful!');
+        message.success('تم التسجيل بنجاح!');
         setSuccessInfo({
           registrationId: result.data?.registrationId || '',
           appointmentTime: result.data?.appointmentTime || '',
@@ -250,10 +250,10 @@ const Registration = () => {
           description: '',
         });
       } else {
-        message.error(result.message || 'Registration failed, please try again later');
+        message.error(result.message || 'فشل التسجيل، يرجى المحاولة مرة أخرى لاحقًا');
       }
     } catch (error) {
-      message.error('Registration failed, please try again later');
+      message.error('فشل التسجيل، يرجى المحاولة مرة أخرى لاحقًا');
       console.error('Registration submission error:', error);
     } finally {
       setLoading(false);
@@ -275,10 +275,10 @@ const Registration = () => {
   const [showFirstCard, setShowFirstCard] = useState(true);
 
   // 使用 useState 管理卡片的图片路径和文字内容
-  const [cardText, setCardText] = useState('go to Application Database');
+  const [cardText, setCardText] = useState('الانتقال إلى قاعدة بيانات التطبيق');
 
   // 使用 useState 管理页面标题
-  const [pageTitle, setPageTitle] = useState('Employee Information Entry System');
+  const [pageTitle, setPageTitle] = useState('نظام إدخال معلومات الموظفين');
 
   // 处理第二个卡片点击事件
   const handleSecondCardClick = () => {
@@ -287,13 +287,15 @@ const Registration = () => {
     // 切换图片和文字内容
     if (showFirstCard) {
       formRef.current.resetFields();
-      setCardText('Return to Add Info');
+      setCardText('العودة إلى إضافة المعلومات');
       // 切换标题为员工数据库
-      setPageTitle('Employee Database');
+      setPageTitle('قاعدة بيانات الموظفين');
+      // 调用接口获取最新数据列表
+      fetchTableData();
     } else {
-      setCardText('go to Application Database');
+      setCardText('الانتقال إلى قاعدة بيانات التطبيق');
       // 切换回原标题
-      setPageTitle('Employee Information Entry System');
+      setPageTitle('نظام إدخال معلومات الموظفين');
     }
   };
 
@@ -315,13 +317,13 @@ const Registration = () => {
   // 根据选择的值打开相应的网站
   switch (value) {
     case 'website1':
-      window.open('https://b6786378dfc4.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
+      window.open('https://46d35c013d33.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
       break;
     case 'website2':
-      window.open('http://d6f1d662ede3.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
+      window.open('https://9aafb966a954.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
       break;
     case 'website3':
-      window.open('http://57283e72ea00.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
+      window.open('https://b8363f9e5916.ngrok-free.app/inspect?username=admin&password=123456', '_blank');
       break;
     default:
       break;
@@ -342,33 +344,34 @@ const Registration = () => {
           style={{
             width: '225px',
             right: 50,
+            // height:35,
           }}
       >
         {cardText}
       </Button>
         <Select
-          placeholder="Select masked database to access"
+          placeholder="اختر قاعدة بيانات مموهة للوصول"
           style={{ width: 350 }} // 增加宽度以完全显示文字
           value={selectedWebsite}
           onChange={handleWebsiteChange}
           allowClear
         >
-          <Option value="website1">Phone Number desensitization Database</Option>
-          <Option value="website2">ID Card desensitization Database</Option>
-          <Option value="website3">Address desensitization Database</Option>
+          <Option value="website1">قاعدة بيانات تعقيم أرقام الهواتف</Option>
+          <Option value="website2">قاعدة بيانات تعقيم بطاقات الهوية</Option>
+          <Option value="website3">قاعدة بيانات تعقيم العناوين</Option>
         </Select>
       </div >
         {showFirstCard ? (
       <Card className="registration-card" style={{marginTop: 50}}>
-        <Title level={2} className="registration-title">Hospital Registration System</Title>
+        <Title level={2} className="registration-title">نظام تسجيل المستشفى</Title>
         
         <Form ref={formRef} layout="vertical">
           <div className="form-section">
-            <Title level={4}>Personal Information</Title>
+            <Title level={4}>المعلومات الشخصية</Title>
             <div className="form-row">
-              <Form.Item label="Full Name" validateStatus={errors.name ? 'error' : ''} help={errors.name}>
+              <Form.Item label="الاسم الكامل" validateStatus={errors.name ? 'error' : ''} help={errors.name}>
                 <Input
-                  placeholder="Please enter your full name"
+                  placeholder="الرجاء إدخال اسمك الكامل"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
@@ -376,9 +379,9 @@ const Registration = () => {
                 />
               </Form.Item>
               
-              <Form.Item label="ID Card Number" validateStatus={errors.idCard ? 'error' : ''} help={errors.idCard}>
+              <Form.Item label="رقم البطاقة الوطنية" validateStatus={errors.idCard ? 'error' : ''} help={errors.idCard}>
                 <Input
-                  placeholder="Please enter your ID card number"
+                  placeholder="الرجاء إدخال رقم بطاقة الهوية"
                   name="idCard"
                   value={formData.idCard}
                   onChange={handleChange}
@@ -388,9 +391,9 @@ const Registration = () => {
             </div>
             
             <div className="form-row">
-              <Form.Item label="Phone Number" validateStatus={errors.phone ? 'error' : ''} help={errors.phone}>
+              <Form.Item label="رقم الهاتف" validateStatus={errors.phone ? 'error' : ''} help={errors.phone}>
                 <Input
-                  placeholder="Please enter your phone number"
+                  placeholder="الرجاء إدخال رقم هاتفك"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
@@ -398,9 +401,9 @@ const Registration = () => {
                 />
               </Form.Item>
               
-              <Form.Item label="Address" validateStatus={errors.address ? 'error' : ''} help={errors.address}>
+              <Form.Item label="العنوان" validateStatus={errors.address ? 'error' : ''} help={errors.address}>
                 <Input
-                  placeholder="Please enter your address"
+                  placeholder="الرجاء إدخال عنوانك"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
@@ -411,11 +414,11 @@ const Registration = () => {
           </div>
           
           <div className="form-section">
-            <Title level={4}>Registration Information</Title>
+            <Title level={4}>معلومات التسجيل</Title>
             <div className="form-row">
-              <Form.Item label="Department" validateStatus={errors.department ? 'error' : ''} help={errors.department}>
+              <Form.Item label="القسم" validateStatus={errors.department ? 'error' : ''} help={errors.department}>
                 <Select
-                  placeholder="Please select a department"
+                  placeholder="الرجاء اختيار قسم"
                   value={formData.department}
                   onChange={(value) => handleSelectChange('department', value)}
                   className="form-select"
@@ -426,9 +429,9 @@ const Registration = () => {
                 </Select>
               </Form.Item>
               
-              <Form.Item label="Doctor" validateStatus={errors.doctor ? 'error' : ''} help={errors.doctor}>
+              <Form.Item label="الدكتور" validateStatus={errors.doctor ? 'error' : ''} help={errors.doctor}>
                 <Select
-                  placeholder="Please select a doctor"
+                  placeholder="الرجاء اختيار دكتور"
                   value={formData.doctor}
                   onChange={(value) => handleSelectChange('doctor', value)}
                   disabled={!formData.department}
@@ -441,16 +444,16 @@ const Registration = () => {
                       disabled={!doctor.available}
                     >
                       {doctor.name} - {doctor.title}
-                      {!doctor.available && ' (Full)'}
+                      {!doctor.available && ' (محجوز)'}
                     </Option>
                   ))}
                 </Select>
               </Form.Item>
             </div>
             
-            <Form.Item label="Medical Description (Optional)" validateStatus={errors.description ? 'error' : ''} help={errors.description}>
+            <Form.Item label="الوصف الطبي (اختياري)" validateStatus={errors.description ? 'error' : ''} help={errors.description}>
   <Input.TextArea
-    placeholder="Please briefly describe your condition (optional)"
+    placeholder="الرجاء وصف حالتك باختصار (اختياري)"
     name="description"
     value={formData.description}
     onChange={handleChange}
@@ -470,99 +473,100 @@ const Registration = () => {
   size="large"
   block
 >
-  Submit Registration
+  إرسال التسجيل
 </Button>
         </Form>
       </Card>
         ) : (
-     <Card title="Database" style={{marginTop:"50px"}}>
-            {/* 绑定点击事件 */}
-            {/* <Button type="primary" style={{ marginRight: 16 }} onClick={refreshData}>Update Database</Button> */}
-            {/* 自定义分页配置的表格 */}
-            <div className="table-container">
-              <Table 
-                className="hover-scale-table"
-                columns={[
+          <Card className="registration-card" style={{marginTop: 50, height: '600px', overflow: 'hidden'}}>
+    <Title level={2} className="registration-title">{pageTitle}</Title>
+    <div style={{height: 'calc(100% - 60px)', overflow: 'auto'}}>
+      <Table
+        dataSource={dataSource || []}
+        columns={[
                   {
-                    title: 'Name',
+                    title: 'الاسم',
                     dataIndex: 'name',
                     key: 'name',
                   },
                   {
-                    title: 'Phone',
+                    title: 'الهاتف',
                     dataIndex: 'phone',
                     key: 'phone',
                   },
                   {
-                    title: 'ID Number',
+                    title: 'رقم الهوية',
                     dataIndex: 'id',
                     key: 'id',
                   },
                   {
-                    title: 'Address',
+                    title: 'العنوان',
                     dataIndex: 'address',
                     key: 'address',
                   },
                   {
-                    title: 'Department',
+                    title: 'القسم',
                     dataIndex: 'department',
                     key: 'department',
                   },
                   {
-                    title: 'Doctor',
+                    title: 'الدكتور',
                     dataIndex: 'doctor',
                     key: 'doctor',
                   },
                   {
-                    title: 'Description',
+                    title: 'الوصف',
                     dataIndex: 'description',
                     key: 'description',
                   },
-                ]} 
-                dataSource={dataSource} 
-                pagination={{
-                  current: currentPage,
-                  pageSize: pageSize, // 这里会使用我们设置的初始值5
-                  total: total,
-                  showQuickJumper: true,
-                  showSizeChanger: true,
-                  // 分页变化回调
-                  onChange: (page, pageSize) => {
+                ]}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: total,
+          onChange: (page, pageSize) => {
                     setCurrentPage(page);
                     setPageSize(pageSize);
                   },
                   onShowSizeChange: (current, size) => {
                     setCurrentPage(1);
                     setPageSize(size);
-                  }
-                }}
-                // 添加表格属性，确保表头固定
-                scroll={{ y: 'calc(100% - 50px)' }} 
-              />
-            </div>
+                  },
+          showSizeChanger: true,
+          showTotal: (total) => `المجموع: ${total} مدخل`
+        }}
+        rowKey="id"
+        scroll={{ y: 'calc(100vh - 400px)' }}
+        // 添加空状态处理
+        locale={{
+          emptyText: 'لا توجد بيانات'
+        }}
+      />
+    </div>
           </Card>
+      
         )}
       {/* 挂号成功弹窗 */}
       <Modal
-        title="Registration Successful"
+        title="تم التسجيل بنجاح"
         open={isSuccessModalVisible}
         onOk={handleSuccessModalClose}
         onCancel={handleSuccessModalClose}
         footer={[
           <Button key="ok" type="primary" onClick={handleSuccessModalClose}>
-            OK
+            موافق
           </Button>
         ]}
       >
         <div className="success-content">
-          <p>Congratulations! Your registration has been successful!</p>
+          <p>تهانينا! لقد تم تسجيلك بنجاح!</p>
           {successInfo.registrationId && (
-            <p>Registration ID: {successInfo.registrationId}</p>
+            <p>رقم التسجيل: {successInfo.registrationId}</p>
           )}
           {successInfo.appointmentTime && (
-            <p>Appointment Time: {successInfo.appointmentTime}</p>
+            <p>وقت الحجز: {successInfo.appointmentTime}</p>
           )}
-          <p>Please arrive at the hospital on time for your appointment.</p>
+          <p>يرجى الوصول إلى المستشفى في الوقت المحدد للحجز.</p>
         </div>
       </Modal>
     </div>
