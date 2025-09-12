@@ -18,6 +18,9 @@ const Registration = () => {
   // 修改pageSize的初始值为5
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
+  // 新增：添加初始弹窗状态
+  const [isInitialModalVisible, setIsInitialModalVisible] = useState(true);
+  
   // 获取表格数据
   const fetchTableData = async () => {
   try {
@@ -45,7 +48,10 @@ const Registration = () => {
     fetchTableData();
   }, [currentPage, pageSize]);
 
-
+  // 新增：处理初始弹窗关闭
+  const handleInitialModalClose = () => {
+    setIsInitialModalVisible(false);
+  };
 
 
 
@@ -568,6 +574,23 @@ const Registration = () => {
             <p>Appointment Time: {successInfo.appointmentTime}</p>
           )}
           <p>Please arrive at the hospital on time for your appointment.</p>
+        </div>
+      </Modal>
+      
+      {/* 新增：初始弹窗 */}
+      <Modal
+        title="Language Selection Notice"
+        open={isInitialModalVisible}
+        onOk={handleInitialModalClose}
+        onCancel={handleInitialModalClose}
+        okText="I understand"
+        cancelText="Close"
+      >
+        <div style={{ textAlign: 'center', fontSize: '16px', lineHeight: '1.8' }}>
+          <p style={{ fontSize: '16px', textAlign: 'center' }}>每个业务都做了三种语言选择，除语言外无其他不同<br/>
+          Each business offers three language options, with no other differences apart from the language<br/>
+          كل عمل قام بتقديم ثلاثة خيارات للغة، ولا يوجد اختلاف آخر سوى اللغة.
+          </p>
         </div>
       </Modal>
     </div>
