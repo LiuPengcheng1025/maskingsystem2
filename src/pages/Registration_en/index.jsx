@@ -587,9 +587,11 @@ const Registration = () => {
         cancelText="Close"
       >
         <div style={{ textAlign: 'center', fontSize: '16px', lineHeight: '1.8' }}>
-          <p style={{ fontSize: '16px', textAlign: 'center' }}>每个业务都做了三种语言选择，除语言外无其他不同<br/>
-          Each business offers three language options, with no other differences apart from the language<br/>
-          كل عمل قام بتقديم ثلاثة خيارات للغة، ولا يوجد اختلاف آخر سوى اللغة.
+          <p style={{ fontSize: '16px', textAlign: 'left' }}>The system provides three language versions:<br/>
+          &nbsp; • &nbsp;&nbsp;&nbsp;English: &nbsp;&nbsp; registration&nbsp;&nbsp;/ &nbsp;&nbsp;payment<br/>
+          &nbsp; • &nbsp;&nbsp;&nbsp;Chinese: &nbsp; 挂号&nbsp;&nbsp; / &nbsp;&nbsp;支付<br/>
+          &nbsp; • &nbsp;&nbsp;&nbsp;Arabic:  &nbsp;&nbsp; &nbsp;دفع&nbsp;&nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp; المسجل  &nbsp;&nbsp;<br/>
+          All language versions have the same functionality; only the display language is different.
           </p>
         </div>
       </Modal>
